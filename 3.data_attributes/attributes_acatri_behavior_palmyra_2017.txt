@@ -1,0 +1,34 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+Island		character				
+FollowID		character				
+Date		Date		!Add datetime specifier here!		
+Site		categorical				
+start.time		Date		!Add datetime specifier here!		
+end.time		Date		!Add datetime specifier here!		
+Observer		categorical				
+time.stamp		numeric	!Add units here!			
+school.size		numeric	!Add units here!			
+behavior		categorical				
+inv		numeric	!Add units here!			
+inv.AL		numeric	!Add units here!			
+inv.AN		numeric	!Add units here!			
+inv.SN		numeric	!Add units here!			
+inv.CS		numeric	!Add units here!			
+pred		numeric	!Add units here!			
+pred.LB		numeric	!Add units here!			
+pred.CM		numeric	!Add units here!			
+pred.BTS		numeric	!Add units here!			
+pred.ROI		numeric	!Add units here!			
+pred.AC		numeric	!Add units here!			
+het.div		numeric	!Add units here!			
+het.AB		numeric	!Add units here!			
+het.KYPH		numeric	!Add units here!			
+het.AN		numeric	!Add units here!			
+het.AX		numeric	!Add units here!			
+het.MN		numeric	!Add units here!			
+het.parrot		numeric	!Add units here!			
+het.SR		numeric	!Add units here!			
+het.SF		numeric	!Add units here!			
+het.SA		numeric	!Add units here!			
+het.SO		numeric	!Add units here!			
+het.CSP		numeric	!Add units here!			

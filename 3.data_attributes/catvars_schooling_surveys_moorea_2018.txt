@@ -1,0 +1,18 @@
+attributeName	code	definition
+group	HERBIVORE	
+group	PREDATOR	
+group	SCHOOL	
+group	SCHOOL, HERBIVORE	
+Observer	ASG	
+species	ACAGUT	
+species	ACANIGRO	
+species	ACATRI	
+species	CARANXMEL	
+species	CHLFRO	
+species	CHLSPI	
+species	LUTFUL	
+species	LUTMON	
+species	MULFLA	
+species	MULVAN	
+species	SCAPSI	
+species	STENIG	

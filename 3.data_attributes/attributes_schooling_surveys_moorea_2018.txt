@@ -1,0 +1,11 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+Island		character				
+SurveyID		character				
+Date		Date		!Add datetime specifier here!		
+Site		character				
+Observer		categorical				
+group		categorical				
+species		categorical				
+s.encounter.num		character				
+schooling		numeric	!Add units here!			
+count		numeric	!Add units here!			

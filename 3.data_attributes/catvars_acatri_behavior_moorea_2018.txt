@@ -1,0 +1,6 @@
+attributeName	code	definition
+behavior	G	
+behavior	S	
+behavior	U	
+Observer	ASG	
+Observer	EJ	

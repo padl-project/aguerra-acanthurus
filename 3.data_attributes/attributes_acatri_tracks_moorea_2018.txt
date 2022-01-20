@@ -1,0 +1,8 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+Island		categorical				
+FollowID		character				
+Date		Date		!Add datetime specifier here!		
+Site		character				
+time.stamp		numeric	!Add units here!			
+lat		numeric	!Add units here!			
+lon		numeric	!Add units here!			

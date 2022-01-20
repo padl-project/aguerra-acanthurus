@@ -1,0 +1,10 @@
+attributeName	code	definition
+Site	CC	
+Site	LL	
+Site	PS	
+Site	PSI	
+Site	PSM	
+Site	PSO	
+Site	RP	
+Site	SIB	
+Site	WT	

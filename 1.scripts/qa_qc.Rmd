@@ -1,0 +1,241 @@
+---
+title: "qa_qc"
+author: "Camila Vargas"
+date: "1/19/2022"
+output: html_document
+---
+
+Looking into Ana Sofia Guerra's data to make sure all data is clean, accurate and in the right format.
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(freeR)
+library(janitor)
+library(lubridate)
+library(here)
+
+```
+
+
+## Read data
+```{r}
+
+ac_b_morea <- read_csv(here::here("6.raw_data/acatri_behavior_moo2018.csv"))
+ac_b_pal <- read_csv(here::here("6.raw_data/acatri_behavior_pal2017.csv"))
+
+track_moo <- read_csv(here::here("6.raw_data/acatri_tracks_moo2018.csv"))
+track_pal <- read_csv(here::here("6.raw_data/acatri_tracks_pal2017.csv"))
+
+
+school_moo <- read_csv(here::here("6.raw_data/schooling_surveys_moo2018.csv"))
+
+school_pal <- read_csv(here::here("6.raw_data/schooling_surveys_pal2017.csv"))
+
+```
+
+
+
+## Compare col names
+```{r}
+colnames(ac_b_morea)
+colnames(ac_b_pal)
+```
+
+The behavior data between Moorea and Palmyra do not exactly match on col names
+
+```{r}
+colnames(track_moo)
+olnames(track_pal)
+```
+The only difference is that Moorea has a Date column and Palmyra does not. Both have timestamps
+
+```{r}
+colnames(school_moo)
+colnames(school_pal)
+
+```
+
+All the same. In both dataframes columns from 11 to 19 are NA columns.
+
+
+## Are there NAs?
+```{r}
+freeR::complete(ac_b_morea) ##complete
+freeR::complete(ac_b_pal) ##complete
+
+freeR::complete(track_moo) ##complete
+freeR::complete(track_pal) ##complete
+
+freeR::complete(school_moo) ## all columns have 367 NAs except for 'schooling' that has 412
+freeR::complete(school_pal) ## all columns have 2 NAs except for 'schooling' that has 170
+```
+
+
+## Check NAs are intentional NAs
+
+```{r}
+check_na_moo <- school_moo %>%
+  filter_at(1:10, is.na) ## acrooss all variables. 367 NAs
+
+##Opposite is to drop NAs/ We drop them from the first 8 columns because the column schooling does not have
+
+no_na_moo <- school_moo %>% 
+  drop_na(1:8)
+
+check_na_pal <- school_pal %>%
+  filter_at(1:10, is.na)
+
+no_na_pal <- school_pal %>% 
+  drop_na(1:8)
+```
+
+We need to remove observations with NAs across all columns
+
+
+## Date and time format
+```{r}
+head(ac_b_morea)
+class(ac_b_morea$Date) ## date is class character format: MM/DD/YY
+class(ac_b_morea$time.stamp)
+unique(ac_b_morea$time.stamp)
+
+head(ac_b_pal)
+class(ac_b_pal$Date) ## date is class character format: MM/DD/YY
+unique(ac_b_pal$time.stamp) ## time.stamp are numbers from 1-60
+
+
+head(track_moo)
+class(track_moo$Date) ## date is class character format: MM/DD/YY
+unique(track_moo$time.stamp) ## time.stamp are numbers from 1-60
+
+head(track_pal) ## !!! NO Date!!!
+unique(track_pal$time.stamp) ## time.stamp are numbers from 1-60
+
+
+head(school_moo)
+class(school_moo$Date) ## Date class character, format: DD-mmm-YY
+
+
+head(school_pal)
+class(school_pal$Date) ## date is class character format: MM/DD/YY
+
+```
+
+Need to format dates into YYYY-MM-DD
+
+## Clean data
+```{r}
+## Behavior
+clean_b_moo <- ac_b_morea %>% 
+  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+
+clean_b_pal <- ac_b_pal %>% 
+  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+
+##Tacking
+
+clean_track_moo <- track_moo %>%
+  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+
+##track_pal does not have date
+
+clean_track_pal <- track_pal %>% 
+  mutate(Date = str_remove(FollowID, "(?<=\\-).+"),
+         Date = str_remove(Date, "\\-") %>% trimws(),
+         Date = as.Date(Date, format = "%d%m%Y"))%>% 
+  select(Island, FollowID, Date, everything())
+
+
+## School
+clean_school_moo <- school_moo %>% 
+  select(1:10) %>% 
+  drop_na(1:8) %>%
+  mutate(Date = case_when(Date == "23-Aug-18" ~ "8/23/18",
+                          T ~ Date),
+         Date = as.Date(Date, format = "%m/%d/%y")) 
+  
+  
+clean_school_pal <- school_pal %>%
+  select(1:10) %>% 
+  drop_na(1:8) %>%
+  mutate(Date = as.Date(Date, format = "%m/%d/%y"))
+  
+
+```
+
+
+
+## Check every category has the same format within a column
+only character/categorical variables
+```{r}
+## Behavior
+
+str(clean_b_moo)
+unique(clean_b_moo$Island) #ok
+unique(clean_b_moo$Observer) #ok
+unique(clean_b_moo$behavior) #ok
+
+str(clean_b_pal)
+unique(clean_b_pal$Island) #ok
+unique(clean_b_pal$Observer) ## Make sure each initial is from somone different. For Example is KD and KDM different?
+unique(clean_b_pal$behavior) #ok
+
+## Tacking
+
+str(clean_track_moo)
+unique(track_moo$Island) #ok
+unique(clean_track_moo$Site) #ok
+
+clean_track_pal <- track_pal
+
+str(clean_track_pal)
+unique(clean_track_pal$Island)
+unique(clean_track_pal$Site) ## !!need definition!!
+
+##School
+str(clean_school_moo)
+unique(clean_school_moo$Island) #ok
+unique(clean_school_moo$Site) #ok
+unique(clean_school_moo$Observer) #ok
+unique(clean_school_moo$group) ## need definitions, make sure this are right
+unique(clean_school_moo$species) ## need definitions, make sure this are right
+unique(clean_school_moo$s.encounter.num) ## need definitions.
+
+
+str(clean_school_pal)
+unique(clean_school_pal$Island) #ok
+unique(clean_school_pal$Site) #Need definitions
+unique(clean_school_pal$Observer) #ok
+unique(clean_school_pal$group) ## need definitions
+unique(clean_school_pal$species) ## need definitions, make sure this are right
+unique(clean_school_pal$s.encounter.num) ## need definitions.
+
+```
+
+
+## Save clean data
+
+```{r}
+
+## beahavior
+write_csv(clean_b_moo, here::here("7.clean_data/acatri_behavior_moorea_2018.csv"))
+
+write_csv(clean_b_pal, here::here("7.clean_data/acatri_behavior_palmyra_2017.csv"))
+
+##Tracking
+write_csv(clean_track_moo, here::here("7.clean_data/acatri_tracks_moorea_2018.csv"))
+
+write_csv(clean_track_pal, here::here("7.clean_data/acatri_tracks_palmyra_2017.csv"))
+
+## Schooling
+
+write_csv(clean_school_moo, here::here("7.clean_data/schooling_surveys_moorea_2018.csv"))
+
+write_csv(clean_school_pal, here::here("7.clean_data/schooling_surveys_palmyra_2017.csv"))
+
+
+
+```
+
+
